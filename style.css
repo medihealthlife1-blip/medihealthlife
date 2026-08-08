@@ -1434,3 +1434,126 @@ RESPONSIVE
 /*=========================================
 END OF STYLE.CSS
 =========================================*/
+
+/*=========================================
+  MEDI HEALTH MOVING BIKE HERO
+=========================================*/
+
+.hero-right {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-visual {
+    position: relative;
+    width: 100%;
+    max-width: 680px;
+    overflow: hidden;
+    line-height: 0;
+}
+
+/* Main stationary image */
+.hero-visual .hero-static {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0;
+    box-shadow: none;
+    animation: none;
+}
+
+/* Moving bike/rider */
+.hero-visual .hero-bike {
+    position: absolute;
+    left: 35.5%;
+    top: 40%;
+    width: 63.8%;
+    height: auto;
+
+    display: block;
+    border-radius: 0;
+    box-shadow: none;
+
+    z-index: 2;
+    pointer-events: none;
+
+    animation: bikeRide 3.8s ease-in-out infinite;
+}
+
+/* Bike movement */
+@keyframes bikeRide {
+
+    0% {
+        transform: translateX(-18px);
+    }
+
+    25% {
+        transform: translateX(0px) translateY(-3px);
+    }
+
+    50% {
+        transform: translateX(22px);
+    }
+
+    75% {
+        transform: translateX(0px) translateY(-3px);
+    }
+
+    100% {
+        transform: translateX(-18px);
+    }
+}
+
+
+/*=========================================
+  TABLET
+=========================================*/
+
+@media(max-width:991px) {
+
+    .hero-visual {
+        max-width: 620px;
+    }
+
+    .hero-visual .hero-bike {
+        left: 35.5%;
+        top: 40%;
+        width: 63.8%;
+    }
+
+}
+
+
+/*=========================================
+  MOBILE
+=========================================*/
+
+@media(max-width:768px) {
+
+    .hero-visual {
+        max-width: 520px;
+    }
+
+    .hero-visual .hero-bike {
+        left: 35.5%;
+        top: 40%;
+        width: 63.8%;
+        animation-duration: 4.2s;
+    }
+
+}
+
+
+/*=========================================
+  REDUCE MOTION
+=========================================*/
+
+@media(prefers-reduced-motion: reduce) {
+
+    .hero-visual .hero-bike {
+        animation: none;
+    }
+
+}
