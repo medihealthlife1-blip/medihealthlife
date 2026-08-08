@@ -1,31 +1,36 @@
 /*==================================================
-MEDI HEALTH
-SCRIPT.JS - PART 1
+  MEDI HEALTH
+  SCRIPT.JS
 ==================================================*/
 
 "use strict";
 
-/*=========================================
-SELECTORS
-=========================================*/
+/*==================================================
+  SELECTORS
+==================================================*/
 
 const header = document.querySelector(".header");
 const topBtn = document.getElementById("topBtn");
 const navLinks = document.querySelectorAll(".navbar a");
+const navbar = document.querySelector(".navbar");
+const menuBtn = document.querySelector(".menu-toggle");
 
-/*=========================================
-STICKY HEADER
-=========================================*/
+
+/*==================================================
+  STICKY HEADER
+==================================================*/
 
 window.addEventListener("scroll", () => {
 
-    if(window.scrollY > 80){
+    if (!header) return;
+
+    if (window.scrollY > 80) {
 
         header.style.padding = "0";
         header.style.boxShadow = "0 8px 25px rgba(0,0,0,.10)";
         header.style.background = "rgba(255,255,255,.97)";
 
-    }else{
+    } else {
 
         header.style.boxShadow = "0 5px 18px rgba(0,0,0,.05)";
         header.style.background = "rgba(255,255,255,.95)";
@@ -34,17 +39,20 @@ window.addEventListener("scroll", () => {
 
 });
 
-/*=========================================
-BACK TO TOP BUTTON
-=========================================*/
 
-window.addEventListener("scroll", ()=>{
+/*==================================================
+  BACK TO TOP
+==================================================*/
 
-    if(window.scrollY > 400){
+window.addEventListener("scroll", () => {
+
+    if (!topBtn) return;
+
+    if (window.scrollY > 400) {
 
         topBtn.style.display = "flex";
 
-    }else{
+    } else {
 
         topBtn.style.display = "none";
 
@@ -52,37 +60,43 @@ window.addEventListener("scroll", ()=>{
 
 });
 
-topBtn.addEventListener("click", ()=>{
 
-    window.scrollTo({
+if (topBtn) {
 
-        top:0,
+    topBtn.addEventListener("click", () => {
 
-        behavior:"smooth"
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
 
     });
 
-});
+}
 
-/*=========================================
-SMOOTH SCROLL
-=========================================*/
 
-navLinks.forEach(link=>{
+/*==================================================
+  SMOOTH SCROLL
+==================================================*/
 
-    link.addEventListener("click",function(e){
+navLinks.forEach(link => {
 
-        e.preventDefault();
+    link.addEventListener("click", function (e) {
 
-        const target=document.querySelector(this.getAttribute("href"));
+        const href = this.getAttribute("href");
 
-        if(target){
+        if (!href || !href.startsWith("#")) return;
+
+        const target = document.querySelector(href);
+
+        if (target) {
+
+            e.preventDefault();
 
             window.scrollTo({
 
-                top:target.offsetTop-80,
-
-                behavior:"smooth"
+                top: target.offsetTop - 80,
+                behavior: "smooth"
 
             });
 
@@ -92,35 +106,38 @@ navLinks.forEach(link=>{
 
 });
 
-/*=========================================
-ACTIVE NAVIGATION
-=========================================*/
 
-const sections=document.querySelectorAll("section");
+/*==================================================
+  ACTIVE NAVIGATION
+==================================================*/
 
-window.addEventListener("scroll",()=>{
+const sections = document.querySelectorAll("section");
 
-    let current="";
+window.addEventListener("scroll", () => {
 
-    sections.forEach(section=>{
+    let current = "";
 
-        const sectionTop=section.offsetTop-120;
+    sections.forEach(section => {
 
-        const sectionHeight=section.clientHeight;
+        const sectionTop = section.offsetTop - 120;
+        const sectionHeight = section.clientHeight;
 
-        if(window.scrollY>=sectionTop){
+        if (
+            window.scrollY >= sectionTop &&
+            window.scrollY < sectionTop + sectionHeight
+        ) {
 
-            current=section.getAttribute("id");
+            current = section.getAttribute("id");
 
         }
 
     });
 
-    navLinks.forEach(link=>{
+    navLinks.forEach(link => {
 
         link.classList.remove("active");
 
-        if(link.getAttribute("href")==="#"+current){
+        if (link.getAttribute("href") === "#" + current) {
 
             link.classList.add("active");
 
@@ -130,128 +147,115 @@ window.addEventListener("scroll",()=>{
 
 });
 
-/*=========================================
-MOBILE MENU
-(Add hamburger button later)
-=========================================*/
 
-const menuBtn=document.querySelector(".menu-toggle");
-const navbar=document.querySelector(".navbar");
+/*==================================================
+  MOBILE MENU
+==================================================*/
 
-if(menuBtn){
+if (menuBtn) {
 
-    menuBtn.addEventListener("click",()=>{
+    menuBtn.addEventListener("click", () => {
 
         navbar.classList.toggle("show");
-
         menuBtn.classList.toggle("active");
 
     });
 
 }
 
-/*=========================================
-CLOSE MENU AFTER CLICK
-=========================================*/
 
-navLinks.forEach(link=>{
+navLinks.forEach(link => {
 
-    link.addEventListener("click",()=>{
+    link.addEventListener("click", () => {
 
-        if(navbar){
-
+        if (navbar) {
             navbar.classList.remove("show");
-
         }
 
-        if(menuBtn){
-
+        if (menuBtn) {
             menuBtn.classList.remove("active");
-
         }
 
     });
 
 });
 
-/*=========================================
-HEADER FADE-IN
-=========================================*/
-
-window.addEventListener("load",()=>{
-
-    header.style.opacity="0";
-
-    header.style.transition="opacity .8s ease";
-
-    setTimeout(()=>{
-
-        header.style.opacity="1";
-
-    },150);
-
-});
-
-/*=========================================
-END OF PART 1
-=========================================*/
 
 /*==================================================
-SCRIPT.JS - PART 2
-PACKAGE + FAQ + BOOKING
+  HEADER FADE IN
 ==================================================*/
 
-/*=========================================
-PACKAGE DESCRIPTION TOGGLE
-=========================================*/
+window.addEventListener("load", () => {
 
-function toggleDescription(id){
+    if (!header) return;
 
-    const current=document.getElementById(id);
+    header.style.opacity = "0";
+    header.style.transition = "opacity .8s ease";
 
-    const all=document.querySelectorAll(".description");
+    setTimeout(() => {
 
-    all.forEach(box=>{
+        header.style.opacity = "1";
 
-        if(box!==current){
+    }, 150);
+
+});
+
+
+/*==================================================
+  PACKAGE DESCRIPTION TOGGLE
+==================================================*/
+
+function toggleDescription(id) {
+
+    const current = document.getElementById(id);
+
+    if (!current) return;
+
+    const all = document.querySelectorAll(".description");
+
+    all.forEach(box => {
+
+        if (box !== current) {
 
             box.classList.remove("active");
-
-            box.style.display="none";
+            box.style.display = "none";
 
         }
 
     });
 
-    if(current.style.display==="block"){
+    if (current.style.display === "block") {
 
-        current.style.display="none";
+        current.style.display = "none";
         current.classList.remove("active");
 
-    }else{
+    } else {
 
-        current.style.display="block";
+        current.style.display = "block";
         current.classList.add("active");
 
     }
 
 }
 
-/*=========================================
-FAQ ACCORDION
-=========================================*/
 
-const faqItems=document.querySelectorAll(".faq-item");
+/*==================================================
+  FAQ ACCORDION
+==================================================*/
 
-faqItems.forEach(item=>{
+const faqItems = document.querySelectorAll(".faq-item");
 
-    const question=item.querySelector(".faq-question");
+faqItems.forEach(item => {
 
-    question.addEventListener("click",()=>{
+    const question = item.querySelector(".faq-question");
 
-        faqItems.forEach(other=>{
+    if (!question) return;
 
-            if(other!==item){
+    question.addEventListener("click", () => {
+
+        faqItems.forEach(other => {
+
+            if (other !== item) {
 
                 other.classList.remove("active");
 
@@ -265,320 +269,457 @@ faqItems.forEach(item=>{
 
 });
 
-/*=========================================
-BOOKING FORM
-=========================================*/
-
-const bookingForm=document.getElementById("bookingForm");
-
-if(bookingForm){
-
-bookingForm.addEventListener("submit",function(e){
-
-e.preventDefault();
-
-const name=this.querySelector('input[type="text"]');
-const mobile=this.querySelector('input[type="tel"]');
-const city=this.querySelectorAll('input[type="text"]')[1];
-const location=this.querySelectorAll('input[type="text"]')[2];
-const packageSelect=this.querySelector("select");
-
-if(name.value.trim().length<3){
-
-alert("Please enter your full name.");
-
-name.focus();
-
-return;
-
-}
-
-if(!/^[6-9]\d{9}$/.test(mobile.value.trim())){
-
-alert("Please enter a valid 10-digit mobile number.");
-
-mobile.focus();
-
-return;
-
-}
-
-if(city.value.trim()===""){
-
-alert("Please enter your city.");
-
-city.focus();
-
-return;
-
-}
-
-if(location.value.trim()===""){
-
-alert("Please enter your location.");
-
-location.focus();
-
-return;
-
-}
-
-if(packageSelect.selectedIndex===0){
-
-alert("Please select a health package.");
-
-packageSelect.focus();
-
-return;
-
-}
-
-showSuccessMessage();
-
-this.reset();
-
-});
-
-}
-
-/*=========================================
-SUCCESS POPUP
-=========================================*/
-
-function showSuccessMessage(){
-
-let popup=document.createElement("div");
-
-popup.className="booking-success";
-
-popup.innerHTML=`
-
-<div class="success-box">
-
-<h2>✅ Booking Submitted</h2>
-
-<p>
-
-Thank you for choosing <strong>Medi Health</strong>.
-
-<br><br>
-
-Our team will contact you shortly to confirm your appointment.
-
-</p>
-
-<button id="closeSuccess">
-
-OK
-
-</button>
-
-</div>
-
-`;
-
-document.body.appendChild(popup);
-
-document.getElementById("closeSuccess").onclick=()=>{
-
-popup.remove();
-
-};
-
-setTimeout(()=>{
-
-if(document.body.contains(popup)){
-
-popup.remove();
-
-}
-
-},5000);
-
-}
-
-/*=========================================
-END OF PART 2
-=========================================*/
 
 /*==================================================
-SCRIPT.JS - PART 3
-ANIMATIONS + COUNTERS + PERFORMANCE
+  BOOKING FORM
 ==================================================*/
 
-/*=========================================
-SCROLL REVEAL
-=========================================*/
+const bookingForm = document.getElementById("bookingForm");
+
+if (bookingForm) {
+
+    bookingForm.addEventListener("submit", function (e) {
+
+        e.preventDefault();
+
+        /*------------------------------------------
+          GET FORM VALUES
+        ------------------------------------------*/
+
+        const inputs = this.querySelectorAll("input");
+
+        const name = inputs[0];
+        const email = inputs[1];
+        const mobile = inputs[2];
+        const date = inputs[3];
+        const city = inputs[4];
+        const location = inputs[5];
+
+        const packageSelect = this.querySelector("select");
+        const messageBox = this.querySelector("textarea");
+
+
+        /*------------------------------------------
+          VALIDATION
+        ------------------------------------------*/
+
+        if (!name.value.trim()) {
+
+            alert("Please enter your full name.");
+            name.focus();
+            return;
+
+        }
+
+        if (name.value.trim().length < 3) {
+
+            alert("Please enter a valid full name.");
+            name.focus();
+            return;
+
+        }
+
+
+        if (!mobile.value.trim()) {
+
+            alert("Please enter your mobile number.");
+            mobile.focus();
+            return;
+
+        }
+
+
+        if (!/^[6-9][0-9]{9}$/.test(mobile.value.trim())) {
+
+            alert("Please enter a valid 10-digit Indian mobile number.");
+            mobile.focus();
+            return;
+
+        }
+
+
+        if (!date.value) {
+
+            alert("Please select your preferred date.");
+            date.focus();
+            return;
+
+        }
+
+
+        if (!city.value.trim()) {
+
+            alert("Please enter your city.");
+            city.focus();
+            return;
+
+        }
+
+
+        if (!location.value.trim()) {
+
+            alert("Please enter your location.");
+            location.focus();
+            return;
+
+        }
+
+
+        if (
+            !packageSelect.value ||
+            packageSelect.selectedIndex === 0
+        ) {
+
+            alert("Please select a health package.");
+            packageSelect.focus();
+            return;
+
+        }
+
+
+        /*------------------------------------------
+          PREPARE WHATSAPP MESSAGE
+        ------------------------------------------*/
+
+        const customerName = name.value.trim();
+        const customerEmail = email.value.trim();
+        const customerMobile = mobile.value.trim();
+        const bookingDate = date.value;
+        const customerCity = city.value.trim();
+        const customerLocation = location.value.trim();
+        const selectedPackage = packageSelect.value;
+        const additionalMessage = messageBox
+            ? messageBox.value.trim()
+            : "";
+
+
+        const whatsappMessage =
+`*Medi Health - New Blood Test Booking*
+
+*Name:* ${customerName}
+
+*Email:* ${customerEmail || "Not provided"}
+
+*Mobile:* ${customerMobile}
+
+*Preferred Date:* ${bookingDate}
+
+*City:* ${customerCity}
+
+*Location:* ${customerLocation}
+
+*Health Package:* ${selectedPackage}
+
+*Additional Message:* ${additionalMessage || "None"}`;
+
+
+        /*------------------------------------------
+          WHATSAPP NUMBER
+        ------------------------------------------*/
+
+        const whatsappNumber = "918331961700";
+
+        const whatsappURL =
+            "https://wa.me/" +
+            whatsappNumber +
+            "?text=" +
+            encodeURIComponent(whatsappMessage);
+
+
+        /*------------------------------------------
+          SHOW SUCCESS MESSAGE
+        ------------------------------------------*/
+
+        showSuccessMessage();
+
+
+        /*------------------------------------------
+          OPEN WHATSAPP
+        ------------------------------------------*/
+
+        setTimeout(() => {
+
+            window.open(whatsappURL, "_blank");
+
+        }, 800);
+
+
+        /*------------------------------------------
+          RESET FORM
+        ------------------------------------------*/
+
+        this.reset();
+
+    });
+
+}
+
+
+/*==================================================
+  SUCCESS POPUP
+==================================================*/
+
+function showSuccessMessage() {
+
+    const oldPopup = document.querySelector(".booking-success");
+
+    if (oldPopup) {
+        oldPopup.remove();
+    }
+
+
+    const popup = document.createElement("div");
+
+    popup.className = "booking-success";
+
+    popup.innerHTML = `
+        <div class="success-box">
+
+            <div class="success-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <h3>Booking Details Ready!</h3>
+
+            <p>
+                Your booking details are being sent to
+                Medi Health on WhatsApp.
+            </p>
+
+            <button id="closeSuccess" type="button">
+                OK
+            </button>
+
+        </div>
+    `;
+
+
+    document.body.appendChild(popup);
+
+
+    const closeButton =
+        document.getElementById("closeSuccess");
+
+
+    if (closeButton) {
+
+        closeButton.addEventListener("click", () => {
+
+            popup.remove();
+
+        });
+
+    }
+
+
+    setTimeout(() => {
+
+        if (document.body.contains(popup)) {
+
+            popup.remove();
+
+        }
+
+    }, 5000);
+
+}
+
+
+/*==================================================
+  SCROLL REVEAL
+==================================================*/
 
 const revealElements = document.querySelectorAll(
-".hero,.about,.stats,.packages,.why-us,.how-it-works,.booking,.testimonials,.faq,.contact,footer"
+    ".hero, .about, .stats, .packages, .why-us, .how-it-works, .booking, .testimonials, .faq, .contact, footer"
 );
 
-const revealObserver = new IntersectionObserver((entries)=>{
 
-entries.forEach(entry=>{
+if ("IntersectionObserver" in window) {
 
-if(entry.isIntersecting){
+    const revealObserver = new IntersectionObserver(
+        (entries) => {
 
-entry.target.classList.add("show");
+            entries.forEach(entry => {
 
-}
+                if (entry.isIntersecting) {
 
-});
+                    entry.target.classList.add("show");
 
-},{
-threshold:0.15
-});
+                }
 
-revealElements.forEach(section=>{
+            });
 
-section.classList.add("fade-up");
+        },
+        {
+            threshold: 0.15
+        }
+    );
 
-revealObserver.observe(section);
 
-});
+    revealElements.forEach(section => {
 
-/*=========================================
-COUNTER ANIMATION
-=========================================*/
+        section.classList.add("fade-up");
+        revealObserver.observe(section);
 
-const counters=document.querySelectorAll(".stat-card h2");
-
-const counterObserver=new IntersectionObserver((entries)=>{
-
-entries.forEach(entry=>{
-
-if(!entry.isIntersecting) return;
-
-const counter=entry.target;
-
-const text=counter.innerText;
-
-const number=parseInt(text.replace(/\D/g,""));
-
-const suffix=text.replace(/[0-9]/g,"");
-
-let count=0;
-
-const speed=Math.max(20,number/80);
-
-const update=()=>{
-
-count+=speed;
-
-if(count<number){
-
-counter.innerText=Math.floor(count)+suffix;
-
-requestAnimationFrame(update);
-
-}else{
-
-counter.innerText=text;
+    });
 
 }
 
-};
 
-update();
+/*==================================================
+  COUNTER ANIMATION
+==================================================*/
 
-counterObserver.unobserve(counter);
+const counters = document.querySelectorAll(".stat-card h2");
 
-});
 
-});
+if ("IntersectionObserver" in window) {
 
-counters.forEach(counter=>{
+    const counterObserver = new IntersectionObserver(
+        (entries) => {
 
-counterObserver.observe(counter);
+            entries.forEach(entry => {
 
-});
+                if (!entry.isIntersecting) return;
 
-/*=========================================
-LAZY LOAD IMAGES
-=========================================*/
+                const counter = entry.target;
 
-const images=document.querySelectorAll("img");
+                const originalText = counter.innerText;
 
-images.forEach(img=>{
+                const numberMatch =
+                    originalText.match(/\d+/);
 
-img.loading="lazy";
+                if (!numberMatch) return;
 
-});
+                const number =
+                    parseInt(numberMatch[0], 10);
 
-/*=========================================
-REMOVE LOADER
-=========================================*/
+                const suffix =
+                    originalText.replace(/\d+/g, "");
 
-window.addEventListener("load",()=>{
+                let count = 0;
 
-const loader=document.querySelector(".loader");
+                const speed =
+                    Math.max(20, number / 80);
 
-if(loader){
 
-loader.style.opacity="0";
+                const update = () => {
 
-loader.style.transition=".5s";
+                    count += speed;
 
-setTimeout(()=>{
+                    if (count < number) {
 
-loader.remove();
+                        counter.innerText =
+                            Math.floor(count) + suffix;
 
-},500);
+                        requestAnimationFrame(update);
+
+                    } else {
+
+                        counter.innerText =
+                            originalText;
+
+                    }
+
+                };
+
+
+                update();
+
+                counterObserver.unobserve(counter);
+
+            });
+
+        }
+    );
+
+
+    counters.forEach(counter => {
+
+        counterObserver.observe(counter);
+
+    });
 
 }
 
+
+/*==================================================
+  LAZY LOAD IMAGES
+==================================================*/
+
+const images = document.querySelectorAll("img");
+
+images.forEach(img => {
+
+    img.loading = "lazy";
+
 });
 
-/*=========================================
-CURRENT YEAR
-=========================================*/
 
-const footerParagraph=document.querySelector("footer p:last-child");
+/*==================================================
+  REMOVE LOADER
+==================================================*/
 
-if(footerParagraph){
+window.addEventListener("load", () => {
 
-footerParagraph.innerHTML=
-`© ${new Date().getFullYear()} Medi Health. All Rights Reserved.`;
+    const loader = document.querySelector(".loader");
+
+    if (!loader) return;
+
+    loader.style.opacity = "0";
+    loader.style.transition = ".5s";
+
+    setTimeout(() => {
+
+        loader.remove();
+
+    }, 500);
+
+});
+
+
+/*==================================================
+  CURRENT YEAR
+==================================================*/
+
+const footerParagraph =
+    document.querySelector("footer p:last-child");
+
+if (footerParagraph) {
+
+    footerParagraph.innerHTML =
+        `© ${new Date().getFullYear()} Medi Health. All Rights Reserved.`;
 
 }
 
-/*=========================================
-DISABLE RIGHT CLICK (OPTIONAL)
-=========================================*/
 
-// document.addEventListener("contextmenu",e=>e.preventDefault());
+/*==================================================
+  PRELOAD IMAGES
+==================================================*/
 
-/*=========================================
-PRELOAD IMAGES
-=========================================*/
+window.addEventListener("load", () => {
 
-window.addEventListener("load",()=>{
+    document.querySelectorAll("img").forEach(img => {
 
-document.querySelectorAll("img").forEach(img=>{
+        const preload = new Image();
 
-const preload=new Image();
+        preload.src = img.src;
 
-preload.src=img.src;
+    });
 
 });
 
-});
 
-/*=========================================
-CONSOLE MESSAGE
-=========================================*/
+/*==================================================
+  CONSOLE MESSAGE
+==================================================*/
 
 console.log(
-"%cMedi Health Diagnostics",
-"color:#0077ff;font-size:20px;font-weight:bold;"
+    "%cMedi Health Diagnostics",
+    "color:#0077ff;font-size:20px;font-weight:bold;"
 );
 
 console.log(
-"%cWebsite Developed Successfully",
-"color:#0abf53;font-size:14px;"
+    "%cWebsite Loaded Successfully",
+    "color:#0abf53;font-size:14px;"
 );
-
-/*=========================================
-END OF SCRIPT
-=========================================*/
